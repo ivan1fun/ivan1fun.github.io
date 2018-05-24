@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&subset=cyrillic-ext');
+
+body {
+    background-color: #8e44ad;
+    font-size: 14px;
+    height: 100vh;
+}
+
+.wrapper {
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+p {
+    animation: AnimationName 3s ease-in-out infinite;
+    color: #fff;
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: 'Roboto';
+    margin: 0;
+    text-shadow: 0 3px 15px rgba(27, 27, 27, 0.60);
+    transform: translateY(0%);
+    will-change: transform, text-shadow;
+}
+
+@keyframes AnimationName { 
+    0% {
+        transform: translateY(0%);
+        text-shadow: 0 3px 15px rgba(27, 27, 27, 0.60);
+    }
+    50% {
+        transform: translateY(-10%);
+        text-shadow: 0 13px 19px rgba(27, 27, 27, 0.2);
+    }
+    100% {
+        transform: translateY(0%);
+        text-shadow: 0 3px 15px rgba(27, 27, 27, 0.60);
+    }
+}
