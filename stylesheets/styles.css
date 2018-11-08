@@ -14,19 +14,33 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
-p {
-    animation: AnimationName 3s ease-in-out infinite;
+.wrapper-col {
+    flex-direction: column;
+}
+
+.text {
     color: #fff;
+    font-family: 'Roboto';
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.text-h1 {
+    animation: AnimationName 3s ease-in-out infinite;
     font-size: 4rem;
     font-weight: 700;
-    font-family: 'Roboto';
-    margin: 0;
     text-shadow: 0 3px 15px rgba(27, 27, 27, 0.60);
     transform: translateY(0%);
     will-change: transform, text-shadow;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
 }
 
 @keyframes AnimationName { 
