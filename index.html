@@ -1,26 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>My site</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
-    <link rel="stylesheet" href="stylesheets/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" />
+    <link rel="stylesheet" href="stylesheets/styles.css" />
+    <!-- Carrot quest BEGIN -->
+    <script type="text/javascript">
+      !(function() {
+        function t(t, e) {
+          return function() {
+            window.carrotquestasync.push(t, arguments);
+          };
+        }
+        if ('undefined' == typeof carrotquest) {
+          var e = document.createElement('script');
+          (e.type = 'text/javascript'), (e.async = !0), (e.src = '//cdn.carrotquest.io/api.min.js'), document.getElementsByTagName('head')[0].appendChild(e), (window.carrotquest = {}), (window.carrotquestasync = []), (carrotquest.settings = {});
+          for (var n = ['connect', 'track', 'identify', 'auth', 'oth', 'onReady', 'addCallback', 'removeCallback', 'trackMessageInteraction'], a = 0; a < n.length; a++) carrotquest[n[a]] = t(n[a]);
+        }
+      })(),
+        carrotquest.connect('22647-ffd2ac2c767f93bfbe2750a58b');
+    </script>
+    <!-- Carrot quest END -->
+  </head>
+  <body>
     <div id="app">
-        <div class="wrapper">
-            <p class="text text-h1">Hello world!</p>
-        </div>
-        <div class="wrapper wrapper-col">
-            <p class="text">Давай познакомимся</p>
-            <input type="text" placeholder="Введи свое имя" v-on:blur="writeName($event)">
-            <transition name="fade">
-                <p class="text" v-if="name">Привет, {{name}}!</p>
-            </transition>
-        </div>
+      <div class="wrapper"><p class="text text-h1">Hello world!</p></div>
+      <div class="wrapper wrapper-col">
+        <p class="text">Давай познакомимся</p>
+        <input type="text" placeholder="Введи свое имя" v-on:blur="writeName($event)" />
+        <transition name="fade">
+          <p class="text" v-if="name">Привет, {{ name }}!</p>
+        </transition>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="scripts/main.js"></script>
-</body>
+  </body>
 </html>
