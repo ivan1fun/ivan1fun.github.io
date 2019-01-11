@@ -10,44 +10,10 @@
     />
     <link rel="stylesheet" href="stylesheets/styles.css" />
     <!-- Carrot quest BEGIN -->
-    <script type="text/javascript">
-      !(function() {
-        function t(t, e) {
-          return function() {
-            window.carrotquestasync.push(t, arguments);
-          };
-        }
-        if ('undefined' == typeof carrotquest) {
-          var e = document.createElement('script');
-          (e.type = 'text/javascript'),
-            (e.async = !0),
-            (e.src = '//beta-02.carrotquest.io/cdn/api.min.js'),
-            document.getElementsByTagName('head')[0].appendChild(e),
-            (window.carrotquest = {}),
-            (window.carrotquestasync = []),
-            (carrotquest.settings = {});
-          for (
-            var n = [
-                'connect',
-                'track',
-                'identify',
-                'auth',
-                'oth',
-                'onReady',
-                'addCallback',
-                'removeCallback',
-                'trackMessageInteraction',
-              ],
-              a = 0;
-            a < n.length;
-            a++
-          )
-            carrotquest[n[a]] = t(n[a]);
-        }
-      })(),
-        carrotquest.connect('24-ec767996d2d4c6da6efa1e453f1c5');
-    </script>
-    <!-- Carrot quest END -->
+<script type="text/javascript">
+!function(){function t(t,e){return function(){window.carrotquestasync.push(t,arguments)}}if("undefined"==typeof carrotquest){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="//192.168.255.201/cdn/api.min.js",document.getElementsByTagName("head")[0].appendChild(e),window.carrotquest={},window.carrotquestasync=[],carrotquest.settings={};for(var n=["connect","track","identify","auth","oth","onReady","addCallback","removeCallback","trackMessageInteraction"],a=0;a<n.length;a++)carrotquest[n[a]]=t(n[a])}}(),carrotquest.connect("101517-fde2fd0634d551176daf08861");
+</script>
+<!-- Carrot quest END -->
   </head>
   <body>
     <div id="app">
