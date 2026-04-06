@@ -330,7 +330,7 @@ export class TreeCanvasComponent implements OnChanges {
       } else {
         srcX = parentA.x + W / 2;
       }
-      const srcY = parentA.y + H;
+      const srcY = parentA.y + H / 2;
 
       // Find all unprocessed siblings (share at least one parent with p)
       const siblings = persons.filter(
