@@ -1,0 +1,42 @@
+name: Deploy Genealogy App
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'genealogy/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: genealogy/package-lock.json
+
+      - name: Install dependencies
+        working-directory: genealogy
+        run: npm ci --legacy-peer-deps
+
+      - name: Build
+        working-directory: genealogy
+        run: npx ng build --base-href /genealogy/
+
+      - name: Copy 404.html for SPA routing
+        run: cp genealogy/dist/genealogy/browser/index.html genealogy/dist/genealogy/browser/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: genealogy/dist/genealogy/browser
+          target-folder: genealogy
+          clean: true
