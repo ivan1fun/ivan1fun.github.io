@@ -1,4 +1,4 @@
-import { Component, input, output, signal, OnInit } from '@angular/core';
+import { Component, input, output, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../shared/ui/button.component';
 import { InputComponent } from '../../shared/ui/input.component';
@@ -95,7 +95,7 @@ export interface PersonFormData {
     </form>
   `,
 })
-export class PersonFormComponent implements OnInit {
+export class PersonFormComponent {
   person = input<Person | null>(null);
   submitLabel = input('Добавить');
 
@@ -123,21 +123,27 @@ export class PersonFormComponent implements OnInit {
     { value: 'other', label: 'Другой' },
   ];
 
-  ngOnInit(): void {
-    const p = this.person();
-    if (p) {
-      this.form = {
-        firstName: p.firstName,
-        lastName: p.lastName,
-        sex: p.sex,
-        birthDate: p.birthDate ?? '',
-        deathDate: p.deathDate ?? '',
-        birthPlace: p.birthPlace ?? '',
-        deathPlace: p.deathPlace ?? '',
-        bio: p.bio ?? '',
-      };
-      if (p.photoURL) this.photoPreview.set(p.photoURL);
-    }
+  constructor() {
+    effect(() => {
+      const p = this.person();
+      if (p) {
+        this.form = {
+          firstName: p.firstName,
+          lastName: p.lastName,
+          sex: p.sex,
+          birthDate: p.birthDate ?? '',
+          deathDate: p.deathDate ?? '',
+          birthPlace: p.birthPlace ?? '',
+          deathPlace: p.deathPlace ?? '',
+          bio: p.bio ?? '',
+        };
+        this.photoPreview.set(p.photoURL ?? '');
+      } else {
+        this.form = { firstName: '', lastName: '', sex: 'male', birthDate: '', deathDate: '', birthPlace: '', deathPlace: '', bio: '' };
+        this.photoPreview.set('');
+        this.error.set('');
+      }
+    });
   }
 
   onFileChange(event: Event): void {

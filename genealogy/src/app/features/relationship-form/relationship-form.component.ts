@@ -54,12 +54,13 @@ export class RelationshipFormComponent {
     { value: 'spouse', label: 'Супруги' },
   ];
 
-  personOptions = computed<SelectOption[]>(() =>
-    this.persons().map((p) => ({
+  personOptions = computed<SelectOption[]>(() => [
+    { value: '', label: '— Выберите —' },
+    ...this.persons().map((p) => ({
       value: p.id,
       label: `${p.firstName} ${p.lastName}`,
-    }))
-  );
+    })),
+  ]);
 
   onSubmit(): void {
     if (!this.personAId || !this.personBId) {
