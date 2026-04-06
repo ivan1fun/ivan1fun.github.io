@@ -1,75 +1,67 @@
 import { Injectable } from '@angular/core';
-import {
-  getFirestore,
-  collection,
-  doc,
-  addDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  arrayUnion,
-  arrayRemove,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { firebaseApp } from '../../../shared/firebase/firebase.providers';
+import { pb } from '../../../shared/pocketbase/pocketbase.client';
 import { FamilyTree } from '../../../shared/types';
 
 @Injectable({ providedIn: 'root' })
 export class FamilyTreeService {
-  private db = getFirestore(firebaseApp);
-
   async getTreesForUser(uid: string): Promise<FamilyTree[]> {
-    const q = query(
-      collection(this.db, 'trees'),
-      where('memberUids', 'array-contains', uid)
-    );
-    const snap = await getDocs(q);
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as FamilyTree));
+    const records = await pb.collection('trees').getFullList({
+      filter: `members ~ "${uid}"`,
+      sort: '-created',
+    });
+    return records.map(this.mapRecord);
   }
 
   async getTreeById(id: string): Promise<FamilyTree | null> {
-    const snap = await getDoc(doc(this.db, 'trees', id));
-    if (!snap.exists()) return null;
-    return { id: snap.id, ...snap.data() } as FamilyTree;
+    try {
+      const record = await pb.collection('trees').getOne(id);
+      return this.mapRecord(record);
+    } catch {
+      return null;
+    }
   }
 
   async createTree(name: string, ownerId: string): Promise<FamilyTree> {
-    const data = {
+    const record = await pb.collection('trees').create({
       name,
-      ownerId,
-      memberUids: [ownerId],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    const ref = await addDoc(collection(this.db, 'trees'), data);
-    return { id: ref.id, ...data };
+      owner: ownerId,
+      members: [ownerId],
+    });
+    return this.mapRecord(record);
   }
 
   async updateTree(id: string, updates: Partial<Pick<FamilyTree, 'name'>>): Promise<void> {
-    await updateDoc(doc(this.db, 'trees', id), {
-      ...updates,
-      updatedAt: new Date().toISOString(),
-    });
+    await pb.collection('trees').update(id, updates);
   }
 
   async deleteTree(id: string): Promise<void> {
-    await deleteDoc(doc(this.db, 'trees', id));
+    await pb.collection('trees').delete(id);
   }
 
   async addMember(treeId: string, uid: string): Promise<void> {
-    await updateDoc(doc(this.db, 'trees', treeId), {
-      memberUids: arrayUnion(uid),
-      updatedAt: new Date().toISOString(),
-    });
+    const tree = await pb.collection('trees').getOne(treeId);
+    const members: string[] = tree['members'] ?? [];
+    if (!members.includes(uid)) {
+      await pb.collection('trees').update(treeId, {
+        members: [...members, uid],
+      });
+    }
   }
 
   async removeMember(treeId: string, uid: string): Promise<void> {
-    await updateDoc(doc(this.db, 'trees', treeId), {
-      memberUids: arrayRemove(uid),
-      updatedAt: new Date().toISOString(),
-    });
+    const tree = await pb.collection('trees').getOne(treeId);
+    const members: string[] = (tree['members'] ?? []).filter((m: string) => m !== uid);
+    await pb.collection('trees').update(treeId, { members });
+  }
+
+  private mapRecord(record: any): FamilyTree {
+    return {
+      id: record.id,
+      name: record.name,
+      ownerId: record.owner,
+      memberUids: record.members ?? [],
+      createdAt: record.created,
+      updatedAt: record.updated,
+    };
   }
 }

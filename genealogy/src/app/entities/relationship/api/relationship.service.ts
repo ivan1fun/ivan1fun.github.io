@@ -1,22 +1,14 @@
 import { Injectable } from '@angular/core';
-import {
-  getFirestore,
-  collection,
-  doc,
-  addDoc,
-  getDocs,
-  deleteDoc,
-} from 'firebase/firestore';
-import { firebaseApp } from '../../../shared/firebase/firebase.providers';
+import { pb } from '../../../shared/pocketbase/pocketbase.client';
 import { Relationship, RelationshipType } from '../../../shared/types';
 
 @Injectable({ providedIn: 'root' })
 export class RelationshipService {
-  private db = getFirestore(firebaseApp);
-
   async getRelationships(treeId: string): Promise<Relationship[]> {
-    const snap = await getDocs(collection(this.db, `trees/${treeId}/relationships`));
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() } as Relationship));
+    const records = await pb.collection('relationships').getFullList({
+      filter: `tree = "${treeId}"`,
+    });
+    return records.map(this.mapRecord);
   }
 
   async createRelationship(
@@ -25,12 +17,26 @@ export class RelationshipService {
     personAId: string,
     personBId: string
   ): Promise<Relationship> {
-    const data = { treeId, type, personAId, personBId };
-    const ref = await addDoc(collection(this.db, `trees/${treeId}/relationships`), data);
-    return { id: ref.id, ...data };
+    const record = await pb.collection('relationships').create({
+      tree: treeId,
+      type,
+      personA: personAId,
+      personB: personBId,
+    });
+    return this.mapRecord(record);
   }
 
   async deleteRelationship(treeId: string, relId: string): Promise<void> {
-    await deleteDoc(doc(this.db, `trees/${treeId}/relationships`, relId));
+    await pb.collection('relationships').delete(relId);
+  }
+
+  private mapRecord(record: any): Relationship {
+    return {
+      id: record.id,
+      treeId: record.tree,
+      type: record.type as RelationshipType,
+      personAId: record.personA,
+      personBId: record.personB,
+    };
   }
 }

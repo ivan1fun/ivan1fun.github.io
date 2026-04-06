@@ -1,29 +1,39 @@
 import { Injectable } from '@angular/core';
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from 'firebase/firestore';
-import { firebaseApp } from '../../../shared/firebase/firebase.providers';
+import { pb } from '../../../shared/pocketbase/pocketbase.client';
 import { AppUser } from '../../../shared/types';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private db = getFirestore(firebaseApp);
-
   async getUserById(uid: string): Promise<AppUser | null> {
-    const snap = await getDoc(doc(this.db, 'users', uid));
-    return snap.exists() ? (snap.data() as AppUser) : null;
+    try {
+      const record = await pb.collection('users').getOne(uid);
+      return this.mapRecord(record);
+    } catch {
+      return null;
+    }
   }
 
   async getUserByEmail(email: string): Promise<AppUser | null> {
-    const q = query(collection(this.db, 'users'), where('email', '==', email));
-    const snap = await getDocs(q);
-    if (snap.empty) return null;
-    return snap.docs[0].data() as AppUser;
+    try {
+      const result = await pb.collection('users').getFirstListItem(
+        `email = "${email}"`
+      );
+      return this.mapRecord(result);
+    } catch {
+      return null;
+    }
+  }
+
+  private mapRecord(record: any): AppUser {
+    return {
+      uid: record.id,
+      email: record.email ?? '',
+      displayName: record.name ?? record.email ?? '',
+      photoURL: record.avatar
+        ? pb.files.getURL(record, record.avatar)
+        : undefined,
+      role: 'owner',
+      createdAt: record.created ?? new Date().toISOString(),
+    };
   }
 }
