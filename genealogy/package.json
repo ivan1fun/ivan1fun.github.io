@@ -20,6 +20,7 @@
     "@angular/router": "^21.2.0",
     "@ngrx/signals": "^21.1.0",
     "@swimlane/ngx-graph": "^11.0.0",
+    "@tailwindcss/postcss": "^4.2.2",
     "@tailwindcss/vite": "^4.2.2",
     "d3": "^7.9.0",
     "pocketbase": "^0.26.8",
@@ -31,10 +32,9 @@
     "@angular/build": "^21.2.6",
     "@angular/cli": "^21.2.6",
     "@angular/compiler-cli": "^21.2.0",
-    "autoprefixer": "^10.4.27",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
-    "tailwindcss": "^3.4.19",
+    "tailwindcss": "^4.2.2",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }
